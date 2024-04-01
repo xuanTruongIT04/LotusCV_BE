@@ -44,8 +44,8 @@ export class UsersService {
 
   async findOneByUsername(username: string) {
     return await this.userModel
-      .find({
-        username: username,
+      .findOne({
+        email: username,
       })
       .then((user) => user)
       .catch((err) => err.message);
