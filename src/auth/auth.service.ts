@@ -3,6 +3,9 @@ import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { IUser } from 'src/users/user.interface';
 
+interface IResponseMessage<T>{
+  user: T;
+}
 @Injectable()
 export class AuthService {
   constructor(
@@ -10,7 +13,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(username: string, pass: string): Promise<any> {
+  async validateUser(username: string, pass: string): Promise<IResponseMessage<IUser>> {
     const user = await this.usersService.findOneByUsername(username);
     if (user) {
       const isValidPassword = await this.usersService.isValidPassword(
