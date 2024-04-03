@@ -11,7 +11,8 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   const reflector: Reflector = new Reflector();
-  // app.useGlobalGuards(new JwtAuthGuard(reflector));
+  app.useGlobalGuards(new JwtAuthGuard(reflector));
+  
   //Config CORS
   app.enableCors(
     {
