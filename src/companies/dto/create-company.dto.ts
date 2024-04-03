@@ -1,6 +1,6 @@
-import { IsEmail, IsNotEmpty } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 
-export class CreateUserDto {
+export class CreateCompanyDto {
   @IsNotEmpty({
     message: 'Name is not blank',
   })
