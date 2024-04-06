@@ -178,7 +178,11 @@ export class UsersService {
     return compareSync(password, hash);
   }
 
-  updateUserToken = async (refreshToken: string, _id: string) => {
+  updateUserToken = async (_id: string, refreshToken: string) => {
     await this.userModel.updateOne({ _id }, { refreshToken });
+  };
+
+  findUserByToken = async (refreshToken: string) => {
+    return await this.userModel.findOne({ refreshToken });
   };
 }
