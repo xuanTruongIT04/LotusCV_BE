@@ -43,12 +43,10 @@ export class AuthService {
     const payload = {
       sub: 'Token login',
       iss: 'From server',
-      user: {
-        _id,
-        name,
-        email,
-        role,
-      },
+      _id,
+      name,
+      email,
+      role,
     };
 
     const refreshToken = this.createRefreshToken(payload);
@@ -58,16 +56,16 @@ export class AuthService {
 
     // Add refresh token to cookies
     response.cookie('refresh_token', refreshToken, {
+      httpOnly: true,
       maxAge: ms(this.configService.get<string>('JWT_REFRESH_EXPIRE')),
-      httpOnly: true
     });
 
     return {
       access_token: this.jwtService.sign(payload),
-      _id,
-      name,
-      email,
-      role,
+        _id,
+        name,
+        email,
+        role,
     };
   }
 
