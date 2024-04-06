@@ -6,6 +6,8 @@ import { RegisterUserDto } from 'src/users/dto/create-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { User, UserDocument } from 'src/users/schemas/user.schema';
+import { ConfigService } from '@nestjs/config';
+import ms from 'ms';
 
 interface IResponseMessage<T> {
   user: T;
@@ -16,6 +18,7 @@ export class AuthService {
     @InjectModel(User.name) private userModel: SoftDeleteModel<UserDocument>,
     private usersService: UsersService,
     private jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
 
   async validateUser(
@@ -39,13 +42,19 @@ export class AuthService {
     const payload = {
       sub: 'Token login',
       iss: 'From server',
-      _id,
-      name,
-      email,
-      role,
+      user: {
+        _id,
+        name,
+        email,
+        role,
+      },
     };
+
+    const refresh_token = this.createRefreshToken(payload);
+
     return {
       access_token: this.jwtService.sign(payload),
+      refresh_token,
       _id,
       name,
       email,
@@ -54,11 +63,19 @@ export class AuthService {
   }
 
   async register(user: RegisterUserDto) {
-    let newUser = await this.usersService.register(user)
+    let newUser = await this.usersService.register(user);
 
     return {
       _id: newUser?._id,
       createdAt: newUser?.createdAt,
     };
   }
+
+  createRefreshToken = (payload: any) => {
+    return this.jwtService.sign(payload, {
+      secret: this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET'),
+      expiresIn:
+        ms(this.configService.get<string>('JWT_REFRESH_EXPIRE')) / 1000,
+    });
+  };
 }
