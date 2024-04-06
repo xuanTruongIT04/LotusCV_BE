@@ -8,6 +8,7 @@ import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { User, UserDocument } from 'src/users/schemas/user.schema';
 import { ConfigService } from '@nestjs/config';
 import ms from 'ms';
+import { Response } from 'express';
 
 interface IResponseMessage<T> {
   user: T;
@@ -37,7 +38,7 @@ export class AuthService {
     return null;
   }
 
-  async login(user: IUser) {
+  async login(user: IUser, response: Response) {
     const { _id, name, email, role } = user;
     const payload = {
       sub: 'Token login',
@@ -50,11 +51,19 @@ export class AuthService {
       },
     };
 
-    const refresh_token = this.createRefreshToken(payload);
+    const refreshToken = this.createRefreshToken(payload);
+
+    // Update user with refresh token
+    await this.usersService.updateUserToken(refreshToken, _id);
+
+    // Add refresh token to cookies
+    response.cookie('refresh_token', refreshToken, {
+      maxAge: ms(this.configService.get<string>('JWT_REFRESH_EXPIRE')),
+      httpOnly: true
+    });
 
     return {
       access_token: this.jwtService.sign(payload),
-      refresh_token,
       _id,
       name,
       email,
