@@ -54,6 +54,9 @@ export class AuthService {
     // Update user with refresh token
     await this.usersService.updateUserToken(_id, refreshToken);
 
+    // Clear refresh token
+    this.clearCookies(response, 'refresh_token');
+
     // Add refresh token to cookies
     response.cookie('refresh_token', refreshToken, {
       httpOnly: true,
@@ -117,7 +120,6 @@ export class AuthService {
         payloadToken._id.toString(),
         refreshTokenNew,
       );
-      console.log('ok');
 
       // Add refresh token to cookies
       response.cookie('refresh_token', refreshTokenNew, {
@@ -137,5 +139,22 @@ export class AuthService {
         'Refresh token invalid, please login again 3!',
       );
     }
+  };
+
+  async handleLogout(user: IUser, response: Response) {
+    const { _id } = user;
+
+    // Update user with refresh token
+    await this.usersService.updateUserToken(_id, null);
+
+    // Clear refresh token
+    this.clearCookies(response, 'refresh_token');
+
+    return 'ok';
+  }
+
+  clearCookies = (response: Response, nameCookie) => {
+    // Clear cookies
+    return response.clearCookie(nameCookie);
   };
 }
