@@ -20,7 +20,7 @@ export class AuthController {
 
   @Public()
   @UseGuards(LocalAuthGuard)
-  @Post('/login')
+  @Post('login')
   @ResponseMessage('User login')
   async handleLogin(
     @Req() req,

@@ -122,7 +122,7 @@ export class UsersService {
     return (
       this.userModel
         .findById(id)
-        // .select("-password") // Another way exclude password from results
+        .select("-password") // Another way exclude password from results
         .then((user) => user)
         .catch((err) => err.message)
     );

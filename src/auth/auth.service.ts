@@ -10,9 +10,6 @@ import { ConfigService } from '@nestjs/config';
 import ms from 'ms';
 import { Response } from 'express';
 
-interface IResponseMessage<T> {
-  user: T;
-}
 @Injectable()
 export class AuthService {
   constructor(
@@ -25,13 +22,15 @@ export class AuthService {
   async validateUser(
     username: string,
     pass: string,
-  ): Promise<IResponseMessage<IUser>> {
+  ): Promise<any> {
     const user = await this.usersService.findOneByUsername(username);
+    
     if (user) {
       const isValidPassword = await this.usersService.isValidPassword(
         pass,
         user.password,
       );
+
 
       if (isValidPassword) return user;
     }

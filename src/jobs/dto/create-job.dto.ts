@@ -1,9 +1,13 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
+  ArrayMinSize,
+  IsArray,
+  IsDate,
   IsDefined,
   IsNotEmpty,
   IsNotEmptyObject,
   IsObject,
+  IsString,
   ValidateNested,
 } from 'class-validator';
 import mongoose from 'mongoose';
@@ -17,33 +21,38 @@ class Company {
 }
 
 export class CreateJobDto {
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Name is not blank' })
   name: string;
 
-  @IsNotEmpty()
-  skill: string[];
+  @IsArray({ message: 'Skills is array' })
+  @IsString({ each: true, message: 'Each item is string' })
+  @IsNotEmpty({ message: 'Skills is not blank' })
+  skills: string[];
 
-  @IsNotEmpty()
   location: string;
 
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Salary is not blank' })
   salary: number;
 
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Quantity is not blank' })
   quantity: number;
 
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Level is not blank' })
   level: string;
 
   description: string;
 
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Start date is not blank' })
+  @Transform( ({ value }) => new Date(value))
+  @IsDate({ message: 'Start date have type of date' })
   startDate: Date;
 
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'End date is not blank' })
+  @Transform( ({ value }) => new Date(value))
+  @IsDate({ message: 'End date have type of date' })
   endDate: Date;
 
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Is active is not blank' })
   isActive: Boolean;
 
   @IsDefined()
