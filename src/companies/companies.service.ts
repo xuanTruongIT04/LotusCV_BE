@@ -37,7 +37,7 @@ export class CompaniesService {
     const totalPages = Math.ceil(totalItems / defaultLimit);
 
     const result = await this.companyModel
-      .find({})
+      .find(filter)
       .skip(offset)
       .limit(defaultLimit)
       .sort(sort as any)

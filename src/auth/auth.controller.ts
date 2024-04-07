@@ -42,7 +42,7 @@ export class AuthController {
   }
 
   @Public()
-  @Get('refresh-token')
+  @Get('refresh')
   @ResponseMessage('Get user by refresh token')
   handleRefreshToken(
     @Req() request: Request,

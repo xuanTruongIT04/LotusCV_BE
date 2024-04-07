@@ -99,7 +99,7 @@ export class UsersService {
     const totalPages = Math.ceil(totalItems / defaultLimit);
 
     const result = await this.userModel
-      .find({})
+      .find(filter)
       .skip(offset)
       .limit(defaultLimit)
       .sort(sort as any)
