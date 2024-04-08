@@ -33,7 +33,7 @@ export class TransformInterceptor<T>
             RESPONSE_MESSAGE,
             context.getHandler(),
           ) ||
-          data.message ||
+          data?.message ||
           '',
         data: data,
       })),
