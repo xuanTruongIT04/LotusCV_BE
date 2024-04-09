@@ -28,7 +28,7 @@ export class FilesController {
 
   @Public()
   @Post('upload')
-  @ResponseMessage("Upload single file")
+  @ResponseMessage('Upload single file')
   @UseInterceptors(FileInterceptor('file'))
   uploadFile(
     @UploadedFile(
@@ -47,8 +47,8 @@ export class FilesController {
     file: Express.Multer.File,
   ) {
     return {
-      fileName: file.filename
-    }
+      fileName: file.filename,
+    };
   }
 
   @Get()

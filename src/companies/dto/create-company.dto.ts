@@ -15,4 +15,9 @@ export class CreateCompanyDto {
     message: 'Description is not blank',
   })
   description: string;
+
+  @IsNotEmpty({
+    message: 'Logo is not blank',
+  })
+  logo: string;
 }
