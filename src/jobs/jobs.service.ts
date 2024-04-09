@@ -121,7 +121,6 @@ export class JobsService {
       isActive,
     } = jobInformation;
 
-
     if (!dayjs(startDate).isBefore(dayjs(endDate))) {
       throw new BadRequestException('Start date must before the end date!');
     }

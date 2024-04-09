@@ -119,13 +119,11 @@ export class UsersService {
 
   findOne(id: string) {
     if (!mongoose.Types.ObjectId.isValid(id)) return 'User not found';
-    return (
-      this.userModel
-        .findById(id)
-        .select("-password") // Another way exclude password from results
-        .then((user) => user)
-        .catch((err) => err.message)
-    );
+    return this.userModel
+      .findById(id)
+      .select('-password') // Another way exclude password from results
+      .then((user) => user)
+      .catch((err) => err.message);
   }
 
   async findOneByUsername(username: string) {
@@ -175,6 +173,8 @@ export class UsersService {
   }
 
   isValidPassword(password: string, hash: string) {
+    console.log(password, hash);
+
     return compareSync(password, hash);
   }
 

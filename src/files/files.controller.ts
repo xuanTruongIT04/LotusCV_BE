@@ -29,13 +29,13 @@ export class FilesController {
   @Public()
   @Post('upload')
   @ResponseMessage('Upload single file')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('fileUpload'))
   uploadFile(
     @UploadedFile(
       new ParseFilePipeBuilder()
         .addFileTypeValidator({
           fileType:
-            /^(image\/jpeg|image\/png|gif|application\/pdf|application\/msword|application\/vnd.openxmlformats\-officedocument\.wordprocessingml\.document\|plain)$/i,
+            /^(jpg|jpeg|png|image\/jpeg|image\/png|gif|application\/pdf|application\/msword|application\/vnd.openxmlformats\-officedocument\.wordprocessingml\.document\|plain)$/i,
         })
         .addMaxSizeValidator({
           maxSize: 1024 * 1024,

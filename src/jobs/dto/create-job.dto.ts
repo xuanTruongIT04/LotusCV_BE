@@ -29,6 +29,7 @@ export class CreateJobDto {
   @IsNotEmpty({ message: 'Skills is not blank' })
   skills: string[];
 
+  @IsNotEmpty({ message: 'Location is not blank' })
   location: string;
 
   @IsNotEmpty({ message: 'Salary is not blank' })
@@ -40,15 +41,18 @@ export class CreateJobDto {
   @IsNotEmpty({ message: 'Level is not blank' })
   level: string;
 
+  @IsNotEmpty({ message: 'Logo is not blank' })
+  logo: string;
+
   description: string;
 
   @IsNotEmpty({ message: 'Start date is not blank' })
-  @Transform( ({ value }) => new Date(value))
+  @Transform(({ value }) => new Date(value))
   @IsDate({ message: 'Start date have type of date' })
   startDate: Date;
 
   @IsNotEmpty({ message: 'End date is not blank' })
-  @Transform( ({ value }) => new Date(value))
+  @Transform(({ value }) => new Date(value))
   @IsDate({ message: 'End date have type of date' })
   endDate: Date;
 
