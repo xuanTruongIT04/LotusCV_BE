@@ -132,7 +132,7 @@ export class PermissionsService {
   }
 
   async checkExisted(apiPath: string, method: string) {
-    if (isEmpty(apiPath) || isEmpty(method)) return true;
+    if (isEmpty(apiPath) || isEmpty(method)) throw new BadRequestException("Api path or method is not blank");
 
     const isExists = await this.permissionModel.findOne({
       apiPath,

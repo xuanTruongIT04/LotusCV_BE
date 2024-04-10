@@ -22,12 +22,6 @@ export class CreateResumeDto {
   @IsNotEmpty({ message: 'Job is not blank' })
   @IsMongoId({ message: 'Job must be a valid object id' })
   jobId: mongoose.Schema.Types.ObjectId;
-
-  // @IsNotEmpty({
-  //   message: 'History id is not blank' // })
-  // @IsArray({ message: 'History is array' })
-  // @IsObject({ each: true, message: 'History item is object' })
-  // history: [Object];
 }
 
 export class CreateUserCVDto {
