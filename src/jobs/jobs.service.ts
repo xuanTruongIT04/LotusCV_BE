@@ -100,10 +100,12 @@ export class JobsService {
 
   async findOne(_id: string) {
     if (!mongoose.Types.ObjectId.isValid(_id)) return 'Job not found';
-    return this.jobModel
-      .findById(_id)
-      .then((user) => user)
-      .catch((err) => err.message);
+    try {
+      const job = this.jobModel.findById(_id);
+      return job;
+    } catch (err) {
+      return err.message;
+    }
   }
 
   async update(id: string, jobInformation: UpdateJobDto, user: IUser) {

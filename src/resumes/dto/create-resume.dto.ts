@@ -1,13 +1,4 @@
-import { Type } from 'class-transformer';
-import {
-  IsArray,
-  IsDefined,
-  IsEmail,
-  IsNotEmpty,
-  IsNotEmptyObject,
-  IsObject,
-  ValidateNested,
-} from 'class-validator';
+import { IsEmail, IsMongoId, IsNotEmpty } from 'class-validator';
 import mongoose from 'mongoose';
 
 export class CreateResumeDto {
@@ -40,11 +31,13 @@ export class CreateResumeDto {
   @IsNotEmpty({
     message: 'Company is not blank',
   })
+  @IsMongoId({ message: 'Company must be a valid object id' })
   companyId: mongoose.Schema.Types.ObjectId;
 
   @IsNotEmpty({
     message: 'Job is not blank',
   })
+  @IsMongoId({ message: 'Job must be a valid object id' })
   jobId: mongoose.Schema.Types.ObjectId;
 
   // @IsNotEmpty({
@@ -64,10 +57,12 @@ export class CreateUserCVDto {
   @IsNotEmpty({
     message: 'Company is not blank',
   })
+  @IsMongoId({ message: 'Company must be a valid object id' })
   companyId: mongoose.Schema.Types.ObjectId;
 
   @IsNotEmpty({
     message: 'Job is not blank',
   })
+  @IsMongoId({ message: 'Job must be a valid object id' })
   jobId: mongoose.Schema.Types.ObjectId;
 }

@@ -117,13 +117,15 @@ export class UsersService {
     };
   }
 
-  findOne(id: string) {
-    if (!mongoose.Types.ObjectId.isValid(id)) return 'User not found';
-    return this.userModel
-      .findById(id)
-      .select('-password') // Another way exclude password from results
-      .then((user) => user)
-      .catch((err) => err.message);
+  async findOne(id: string) {
+    if (!mongoose.Types.ObjectId.isValid(id))
+      throw new BadRequestException('User not found');
+    try {
+      const user = await this.userModel.findById(id).select('-password'); // Another way exclude password from results
+      return user;
+    } catch (err) {
+      return err.message;
+    }
   }
 
   async findOneByUsername(username: string) {
