@@ -108,7 +108,7 @@ export class ResumesService {
     }
   }
 
-  async update(_id: string, status: String, user: IUser) {
+  async update(_id: string, status: string, user: IUser) {
     try {
       const inforUpdate = {
         status,

@@ -18,45 +18,26 @@ class Company {
 }
 
 export class CreateUserDto {
-  @IsNotEmpty({
-    message: 'Name is not blank',
-  })
+  @IsNotEmpty({ message: 'Name is not blank' })
   name: string;
 
-  @IsNotEmpty({
-    message: 'Email is not blank',
-  })
-  @IsEmail(
-    {},
-    {
-      message: 'Email is incorrect format',
-    },
-  )
+  @IsNotEmpty({ message: 'Email is not blank' })
+  @IsEmail({}, { message: 'Email is incorrect format' })
   email: string;
 
-  @IsNotEmpty({
-    message: 'Password is not blank',
-  })
+  @IsNotEmpty({ message: 'Password is not blank' })
   password: string;
 
-  @IsNotEmpty({
-    message: 'Address is not blank',
-  })
+  @IsNotEmpty({ message: 'Address is not blank' })
   address: string;
 
-  @IsNotEmpty({
-    message: 'Age is not blank',
-  })
+  @IsNotEmpty({ message: 'Age is not blank' })
   age: number;
 
-  @IsNotEmpty({
-    message: 'Gender is not blank',
-  })
+  @IsNotEmpty({ message: 'Gender is not blank' })
   gender: string;
 
-  @IsNotEmpty({
-    message: 'Role is not blank',
-  })
+  @IsNotEmpty({ message: 'Role is not blank' })
   role: string;
 
   @IsDefined()
@@ -68,39 +49,22 @@ export class CreateUserDto {
 }
 
 export class RegisterUserDto {
-  @IsNotEmpty({
-    message: 'Name is not blank',
-  })
+  @IsNotEmpty({ message: 'Name is not blank' })
   name: string;
 
-  @IsNotEmpty({
-    message: 'Email is not blank',
-  })
-  @IsEmail(
-    {},
-    {
-      message: 'Email is incorrect format',
-    },
-  )
+  @IsNotEmpty({ message: 'Email is not blank' })
+  @IsEmail({}, { message: 'Email is incorrect format' })
   email: string;
 
-  @IsNotEmpty({
-    message: 'Password is not blank',
-  })
+  @IsNotEmpty({ message: 'Password is not blank' })
   password: string;
 
-  @IsNotEmpty({
-    message: 'Address is not blank',
-  })
+  @IsNotEmpty({ message: 'Address is not blank' })
   address: string;
 
-  @IsNotEmpty({
-    message: 'Age is not blank',
-  })
+  @IsNotEmpty({ message: 'Age is not blank' })
   age: number;
 
-  @IsNotEmpty({
-    message: 'Gender is not blank',
-  })
+  @IsNotEmpty({ message: 'Gender is not blank' })
   gender: string;
 }

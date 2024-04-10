@@ -1,23 +1,15 @@
 import { IsNotEmpty } from 'class-validator';
 
 export class CreateCompanyDto {
-  @IsNotEmpty({
-    message: 'Name is not blank',
-  })
+  @IsNotEmpty({ message: 'Name is not blank' })
   name: string;
 
-  @IsNotEmpty({
-    message: 'Address is not blank',
-  })
+  @IsNotEmpty({ message: 'Address is not blank' })
   address: string;
 
-  @IsNotEmpty({
-    message: 'Description is not blank',
-  })
+  @IsNotEmpty({ message: 'Description is not blank' })
   description: string;
 
-  @IsNotEmpty({
-    message: 'Logo is not blank',
-  })
+  @IsNotEmpty({ message: 'Logo is not blank' })
   logo: string;
 }
