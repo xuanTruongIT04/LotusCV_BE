@@ -49,7 +49,7 @@ export class ResumesController {
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body('user') status: string,
+    @Body('status') status: string,
     @User() user: IUser,
   ) {
     return this.resumesService.update(id, status, user);
