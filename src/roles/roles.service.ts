@@ -10,12 +10,14 @@ import { isEmpty } from 'class-validator';
 import mongoose from 'mongoose';
 import aqp from 'api-query-params';
 import path from 'path';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class RolesService {
   constructor(
     @InjectModel(Role.name)
     private roleModel: SoftDeleteModel<PermissionDocument>,
+    private configService: ConfigService,
   ) {}
   async create(createRoleDto: CreateRoleDto, user: IUser) {
     try {
@@ -87,6 +89,7 @@ export class RolesService {
           apiPath: 1,
           name: 1,
           method: 1,
+          module: 1,
         },
       });
       return role;
@@ -99,12 +102,6 @@ export class RolesService {
     try {
       if (!mongoose.Types.ObjectId.isValid(_id))
         throw new BadRequestException('Role not found');
-
-      const { name } = updateRoleDto;
-      const isExisted = await this.checkExistedByName(name.trim());
-
-      if (isExisted)
-        throw new BadRequestException(`Role name '${name}' is existed`);
 
       const inforUpdate = {
         ...updateRoleDto,
@@ -124,6 +121,14 @@ export class RolesService {
     try {
       if (!mongoose.Types.ObjectId.isValid(_id))
         throw new BadRequestException('Role is invalid');
+
+      const foundRole = await this.roleModel.findById(_id);
+
+      const roleAdmin = this.configService.get<string>('ROLE_ADMIN');
+      
+      if (foundRole.name === roleAdmin) {
+        throw new BadRequestException('Can not remove role admin');
+      }
 
       await this.roleModel.updateOne(
         { _id },

@@ -8,11 +8,13 @@ import { genSaltSync, hashSync, compareSync } from 'bcryptjs';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { IUser } from './user.interface';
 import aqp from 'api-query-params';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: SoftDeleteModel<UserDocument>,
+    private configService: ConfigService,
   ) {}
 
   getHashPassword = (password: string) => {
@@ -121,7 +123,10 @@ export class UsersService {
     if (!mongoose.Types.ObjectId.isValid(id))
       throw new BadRequestException('User not found');
     try {
-      const user = await this.userModel.findById(id).select('-password'); // Another way exclude password from results
+      const user = await this.userModel
+        .findById(id)
+        .populate({ path: 'role', select: { name: 1, permission: 1 } })
+        .select('-password'); // Another way exclude password from results
       return user;
     } catch (err) {
       return err.message;
@@ -129,12 +134,16 @@ export class UsersService {
   }
 
   async findOneByUsername(username: string) {
-    return await this.userModel
-      .findOne({
-        email: username,
-      })
-      .then((user) => user)
-      .catch((err) => err.message);
+    try {
+      const user = await this.userModel
+        .findOne({
+          email: username,
+        })
+        .populate({ path: 'role', select: { name: 1, permission: 1 } });
+      return user;
+    } catch (err) {
+      return err.message;
+    }
   }
 
   async update(updateUserDto: UpdateUserDto, user: IUser) {
@@ -154,6 +163,14 @@ export class UsersService {
 
   async remove(id: string, user: IUser) {
     if (!mongoose.Types.ObjectId.isValid(id)) return 'User not found';
+
+    // Check email admin
+    const emailAdmin = this.configService.get<string>('EMAIL_ADMIN');
+
+    const foundUser = await this.userModel.findById(id);
+    if (foundUser.email === emailAdmin) {
+      throw new BadRequestException('Can not remove account admin!');
+    }
 
     let isUpdated = await this.userModel.updateOne(
       {

@@ -99,9 +99,21 @@ export class ResumesService {
 
   async getCVByUser(user: IUser) {
     try {
-      const company = await this.resumeModel.find({
-        userId: user._id,
-      });
+      const company = await this.resumeModel
+        .find({
+          userId: user._id,
+        })
+        .sort('-createdAt')
+        .populate([
+          {
+            path: 'companyId',
+            select: { name: 1 },
+          },
+          {
+            path: 'jobId',
+            select: { name: 1 },
+          },
+        ]);
       return company;
     } catch (err) {
       return err.message;
