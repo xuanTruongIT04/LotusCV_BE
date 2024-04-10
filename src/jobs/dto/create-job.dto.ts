@@ -41,7 +41,6 @@ export class CreateJobDto {
   @IsNotEmpty({ message: 'Level is not blank' })
   level: string;
 
-  @IsNotEmpty({ message: 'Logo is not blank' })
   logo: string;
 
   description: string;
