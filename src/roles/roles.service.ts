@@ -11,6 +11,7 @@ import mongoose from 'mongoose';
 import aqp from 'api-query-params';
 import path from 'path';
 import { ConfigService } from '@nestjs/config';
+import { ADMIN_ROLE } from 'src/databases/init-data';
 
 @Injectable()
 export class RolesService {
@@ -123,10 +124,8 @@ export class RolesService {
         throw new BadRequestException('Role is invalid');
 
       const foundRole = await this.roleModel.findById(_id);
-
-      const roleAdmin = this.configService.get<string>('ROLE_ADMIN');
       
-      if (foundRole.name === roleAdmin) {
+      if (foundRole.name === ADMIN_ROLE) {
         throw new BadRequestException('Can not remove role admin');
       }
 

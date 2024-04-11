@@ -9,6 +9,7 @@ import { User, UserDocument } from 'src/users/schemas/user.schema';
 import { ConfigService } from '@nestjs/config';
 import ms from 'ms';
 import { Response } from 'express';
+import { RolesService } from 'src/roles/roles.service';
 
 @Injectable()
 export class AuthService {
@@ -17,27 +18,33 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     private configService: ConfigService,
+    private rolesService: RolesService,
   ) {}
 
-  async validateUser(
-    username: string,
-    pass: string,
-  ): Promise<any> {
+  async validateUser(username: string, pass: string): Promise<any> {
     const user = await this.usersService.findOneByUsername(username);
-    
+
     if (user) {
       const isValidPassword = await this.usersService.isValidPassword(
         pass,
         user.password,
       );
 
-      if (isValidPassword) return user;
+      if (isValidPassword) {
+        const role = await this.rolesService.findOne(user?.role?._id);
+        const permissions = role?.permissions ?? [];
+        
+        return {
+          ...user.toObject(),
+          permissions,
+        };
+      }
     }
     return null;
   }
 
   async login(user: IUser, response: Response) {
-    const { _id, name, email, role } = user;
+    const { _id, name, email, role, permissions } = user;
     const payload = {
       sub: 'Token login',
       iss: 'From server',
@@ -61,12 +68,21 @@ export class AuthService {
       maxAge: ms(this.configService.get<string>('JWT_REFRESH_EXPIRE')),
     });
 
+    console.log({
+      _id,
+      name,
+      email,
+      role,
+    });
+    
+
     return {
       access_token: this.jwtService.sign(payload),
       _id,
       name,
       email,
       role,
+      permissions,
     };
   }
 
@@ -119,6 +135,11 @@ export class AuthService {
         refreshTokenNew,
       );
 
+      // Fetch user's role
+      const userRole = user?.role as unknown as { _id: string; name: string };
+      const detailRole = await this.rolesService.findOne(userRole._id);
+      const permissions = detailRole?.permissions ?? [];
+
       // Add refresh token to cookies
       response.cookie('refresh_token', refreshTokenNew, {
         httpOnly: true,
@@ -131,6 +152,7 @@ export class AuthService {
         name,
         email,
         role,
+        permissions,
       };
     } catch (err) {
       throw new BadRequestException(
