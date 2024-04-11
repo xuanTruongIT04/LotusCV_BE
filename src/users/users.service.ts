@@ -173,7 +173,7 @@ export class UsersService {
     const emailAdmin = this.configService.get<string>('EMAIL_ADMIN');
 
     const foundUser = await this.userModel.findById(id);
-    if (foundUser.email === emailAdmin) {
+    if (foundUser && foundUser?.email === emailAdmin) {
       throw new BadRequestException('Can not remove account admin!');
     }
 
