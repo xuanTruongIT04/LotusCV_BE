@@ -25,7 +25,7 @@ export class AuthService {
     const user = await this.usersService.findOneByUsername(username);
 
     if (user) {
-      const isValidPassword = await this.usersService.isValidPassword(
+      const isValidPassword = this.usersService.isValidPassword(
         pass,
         user.password,
       );
