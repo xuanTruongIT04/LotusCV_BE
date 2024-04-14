@@ -26,7 +26,7 @@ export class AuthController {
   ) {}
 
   @Public()
-  @Throttle(3, 60)
+  @Throttle({ default: { limit: 3, ttl: 60000 } })
   @UseGuards(LocalAuthGuard)
   @UseGuards(ThrottlerGuard)
   @ApiBody({ type: UserLoginDto, })

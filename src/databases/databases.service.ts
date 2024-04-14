@@ -32,9 +32,9 @@ export class DatabasesService implements OnModuleInit {
   async onModuleInit() {
     const isInit = this.configService.get<string>('SHOULD_INIT');
     if (Boolean(isInit)) {
-      const countPermission = await this.permissionModel.count({});
-      const countRole = await this.roleModel.count({});
-      const countUser = await this.userModel.count({});
+      const countPermission = await this.permissionModel.countDocuments({});
+      const countRole = await this.roleModel.countDocuments({});
+      const countUser = await this.userModel.countDocuments({});
     
       if (countPermission === 0) {
         // Bulk create
