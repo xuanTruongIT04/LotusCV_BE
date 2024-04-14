@@ -7,6 +7,7 @@ import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { TransformInterceptor } from './core/transform.interceptor';
 import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -15,6 +16,9 @@ async function bootstrap() {
   // Config Guards
   const reflector: Reflector = new Reflector();
   app.useGlobalGuards(new JwtAuthGuard(reflector));
+
+ //  Config helmet
+ app.use(helmet());
 
   // Config Interceptor
   app.useGlobalInterceptors(new TransformInterceptor(reflector));
