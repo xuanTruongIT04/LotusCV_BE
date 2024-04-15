@@ -12,12 +12,15 @@ import { Resume, ResumeDocument } from './schemas/resume.schema';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import aqp from 'api-query-params';
 import mongoose from 'mongoose';
+import { HR_ROLE } from 'src/constant/role';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class ResumesService {
   constructor(
     @InjectModel(Resume.name)
     private resumeModel: SoftDeleteModel<ResumeDocument>,
+    private userService: UsersService
   ) {}
 
   async create(resumeInfo: CreateUserCVDto, user: IUser) {
@@ -54,13 +57,20 @@ export class ResumesService {
     };
   }
 
-  async findAll(currentPage: number, limit: number, qs: string) {
-    const { filter, sort, population, projection } = aqp(qs);
+  async findAll(currentPage: number, limit: number, qs: string, user) {
+    let { filter } = aqp(qs);
+    const { sort, population, projection } = aqp(qs);
     delete filter.current;
     delete filter.pageSize;
 
     let offset = (currentPage - 1) * limit;
     let defaultLimit = limit ? limit : 10;
+
+    if (user.role.name === HR_ROLE) {
+      let userDetail = await this.userService.findOne(user._id);
+
+      filter.companyId = userDetail.company._id
+    }
 
     const totalItems = (await this.resumeModel.find(filter)).length;
     const totalPages = Math.ceil(totalItems / defaultLimit);

@@ -9,7 +9,8 @@ import {
 import { Role, RoleDocument } from 'src/roles/schemas/role.schema';
 import { User, UserDocument } from 'src/users/schemas/user.schema';
 import { UsersService } from 'src/users/users.service';
-import { ADMIN_ROLE, INIT_PERMISSIONS, USER_ROLE } from './init-data';
+import { INIT_PERMISSIONS } from './init-data';
+import { ADMIN_ROLE, USER_ROLE } from 'src/constant/role';
 
 @Injectable()
 export class DatabasesService implements OnModuleInit {
@@ -35,7 +36,7 @@ export class DatabasesService implements OnModuleInit {
       const countPermission = await this.permissionModel.countDocuments({});
       const countRole = await this.roleModel.countDocuments({});
       const countUser = await this.userModel.countDocuments({});
-    
+
       if (countPermission === 0) {
         // Bulk create
         await this.permissionModel.insertMany(INIT_PERMISSIONS);
@@ -45,7 +46,7 @@ export class DatabasesService implements OnModuleInit {
         const listPermissions = await this.permissionModel
           .find({})
           .select('_id');
-  
+
         await this.roleModel.insertMany([
           {
             name: ADMIN_ROLE,
@@ -72,8 +73,10 @@ export class DatabasesService implements OnModuleInit {
           {
             name: 'Nguyen Xuan Truong',
             email: 'xuantruong@yopmail.com',
-            password: this.userService.getHashPassword(this.configService.get<string>('INIT_PASSWORD')),
-            age: 25, 
+            password: this.userService.getHashPassword(
+              this.configService.get<string>('INIT_PASSWORD'),
+            ),
+            age: 25,
             gender: 'male',
             address: 'Viet Name',
             role: roleAdmin._id,
@@ -85,7 +88,9 @@ export class DatabasesService implements OnModuleInit {
           {
             name: 'Nguyen Xuan An',
             email: 'xuanan@yopmail.com',
-            password: this.userService.getHashPassword(this.configService.get<string>('INIT_PASSWORD')),
+            password: this.userService.getHashPassword(
+              this.configService.get<string>('INIT_PASSWORD'),
+            ),
             age: 25,
             gender: 'male',
             address: 'Viet Name',
@@ -98,7 +103,9 @@ export class DatabasesService implements OnModuleInit {
           {
             name: 'Nguyen Xuan Dung',
             email: 'xuandung@yopmail.com',
-            password: this.userService.getHashPassword(this.configService.get<string>('INIT_PASSWORD')),
+            password: this.userService.getHashPassword(
+              this.configService.get<string>('INIT_PASSWORD'),
+            ),
             age: 25,
             gender: 'male',
             address: 'Viet Name',
@@ -114,6 +121,6 @@ export class DatabasesService implements OnModuleInit {
       if (countPermission > 0 && countRole > 0 && countUser > 0) {
         this.logger.log('ALREADY INIT SAMPLE DATA...');
       }
-    } 
+    }
   }
 }

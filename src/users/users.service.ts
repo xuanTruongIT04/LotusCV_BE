@@ -10,7 +10,7 @@ import { IUser } from './user.interface';
 import aqp from 'api-query-params';
 import { ConfigService } from '@nestjs/config';
 import { Role, RoleDocument } from 'src/roles/schemas/role.schema';
-import { USER_ROLE } from 'src/databases/init-data';
+import { USER_ROLE } from 'src/constant/role';
 
 @Injectable()
 export class UsersService {
@@ -130,7 +130,7 @@ export class UsersService {
     try {
       const user = await this.userModel
         .findById(id)
-        .populate({ path: 'role', select: { name: 1, permission: 1 } })
+        .populate({ path: 'role', select: { name: 1, permissions: 1 } })
         .select('-password'); // Another way exclude password from results
       return user;
     } catch (err) {

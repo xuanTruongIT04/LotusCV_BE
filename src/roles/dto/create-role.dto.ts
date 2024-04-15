@@ -1,4 +1,4 @@
-import { IsArray, IsMongoId, IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsMongoId, IsNotEmpty } from 'class-validator';
 import mongoose from 'mongoose';
 
 export class CreateRoleDto {
@@ -7,8 +7,14 @@ export class CreateRoleDto {
   })
   name: string;
 
+  @IsNotEmpty({
+    message: 'Description is not blank',
+  })
   description: string;
 
+  @IsNotEmpty({
+    message: 'Status is not blank',
+  })
   isActive: boolean;
 
   @IsArray({ message: 'Permissions is array' })

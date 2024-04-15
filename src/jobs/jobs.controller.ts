@@ -12,7 +12,7 @@ import { JobsService } from './jobs.service';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { IUser } from 'src/users/user.interface';
-import { Public, ResponseMessage, User } from 'src/decorator/customize';
+import { Public, ResponseMessage, SkipCheckPermission, User } from 'src/decorator/customize';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Jobs')
@@ -26,17 +26,18 @@ export class JobsController {
     return this.jobsService.create(createJobDto, user);
   }
 
-  @Public()
   @Get()
   @ResponseMessage('Fetch jobs with pagination')
+  @SkipCheckPermission()
   findAll(
     @Query('current') currentPage: string,
     @Query('pageSize') limit: string,
     @Query() qs: string,
+    @User() user: IUser,
   ) {
-    return this.jobsService.findAll(+currentPage, +limit, qs);
+    return this.jobsService.findAll(+currentPage, +limit, qs, user);
   }
-  
+
   @Public()
   @Get(':id')
   @ResponseMessage('Fetch a job by id')

@@ -12,7 +12,7 @@ import { ResumesService } from './resumes.service';
 import { CreateResumeDto, CreateUserCVDto } from './dto/create-resume.dto';
 import { UpdateResumeDto } from './dto/update-resume.dto';
 import { IUser } from 'src/users/user.interface';
-import { ResponseMessage, User } from 'src/decorator/customize';
+import { ResponseMessage, SkipCheckPermission, User } from 'src/decorator/customize';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Resumes')
@@ -28,12 +28,14 @@ export class ResumesController {
 
   @Get()
   @ResponseMessage('Fetch list resumes with paginate')
+  @SkipCheckPermission()
   findAll(
     @Query('current') currentPage: string,
     @Query('pageSize') limit: string,
     @Query() qs: string,
+    @User() user: IUser
   ) {
-    return this.resumesService.findAll(+currentPage, +limit, qs);
+    return this.resumesService.findAll(+currentPage, +limit, qs, user);
   }
 
   @Get(':id')

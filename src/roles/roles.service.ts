@@ -11,7 +11,7 @@ import mongoose from 'mongoose';
 import aqp from 'api-query-params';
 import path from 'path';
 import { ConfigService } from '@nestjs/config';
-import { ADMIN_ROLE } from 'src/databases/init-data';
+import { ADMIN_ROLE } from 'src/constant/role';
 
 @Injectable()
 export class RolesService {

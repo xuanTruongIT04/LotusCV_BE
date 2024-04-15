@@ -37,7 +37,6 @@ export class MailController {
       });
       //todo
       //build template
-      console.log(jobWithMatchingSkills);
       if (jobWithMatchingSkills.length) {
         const jobs = jobWithMatchingSkills.map((job) => {
           return {

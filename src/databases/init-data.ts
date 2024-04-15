@@ -1,7 +1,3 @@
-export const ADMIN_ROLE = 'SUPER_ADMIN';
-export const USER_ROLE = 'NORMAL_USER';
-
-
 export const INIT_PERMISSIONS = [
   {
       "_id": "648ab415f4328bd3153ee211",

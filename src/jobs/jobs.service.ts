@@ -11,12 +11,15 @@ import { Job, JobDocument } from './schemas/job.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import aqp from 'api-query-params';
+import { UsersService } from 'src/users/users.service';
+import { HR_ROLE } from 'src/constant/role';
 const dayjs = require('dayjs');
 
 @Injectable()
 export class JobsService {
   constructor(
     @InjectModel(Job.name) private jobModel: SoftDeleteModel<JobDocument>,
+    private usersService: UsersService,
   ) {}
 
   async create(jobInformation: CreateJobDto, user: IUser) {
@@ -68,10 +71,20 @@ export class JobsService {
     };
   }
 
-  async findAll(currentPage: number, limit: number, qs: string) {
-    const { filter, sort, population } = aqp(qs);
+  async findAll(currentPage: number, limit: number, qs: string, user: IUser) {
+    let { filter } = aqp(qs);
+    const { sort, population } = aqp(qs);
     delete filter.current;
     delete filter.pageSize;
+
+    if (user.role.name === HR_ROLE) {
+      const userDetail = await this.usersService.findOne(user._id);
+      
+      filter = {
+        ...filter,
+        'company._id': userDetail.company._id,
+      };
+    }
 
     let offset = (currentPage - 1) * limit;
     let defaultLimit = limit ? limit : 10;
